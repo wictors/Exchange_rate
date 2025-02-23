@@ -4,13 +4,19 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
-model Standard {
+model History_Rates {
   base_code        String   @id
-  last_update      DateTime
-  next_update      DateTime
+  year             Int
+  month            Int
+  day              Int
   conversion_rates Json
+}
+
+model Codes {
+  id    Int      @id @default(autoincrement())
+  codes Json
 }
