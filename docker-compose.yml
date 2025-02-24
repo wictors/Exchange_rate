@@ -9,8 +9,10 @@ services:
       DATABASE_URL: mysql://${DB_ROOT_USER}:${DB_ROOT_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
       EXCHANGE_RATE_API_KEY: ${EXCHANGE_RATE_API_KEY}
       EXTERNAL_API_BASE_URL: ${EXTERNAL_API_BASE_URL}
+      NODE_ENV: development
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules
   db:
     image: mariadb:10.5
     restart: always
