@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "nodemon --legacy-watch",
     "build": "tsc",
     "start": "npm run build && node dist/app.js",
     "prisma:generate": "prisma generate",
