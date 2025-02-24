@@ -9,11 +9,13 @@ generator client {
 }
 
 model History_Rates {
-  base_code        String   @id
+  base_code        String 
   year             Int
   month            Int
   day              Int
   conversion_rates Json
+
+  @@id([base_code, year, month, day])
 }
 
 model Codes {
