@@ -26,7 +26,7 @@ export async function getRatesByDate(
       year,
       month,
       day,
-      externalRate.rates,
+      externalRate.conversion_rates,
     );
 
     return createdRate;

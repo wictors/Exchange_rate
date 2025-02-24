@@ -63,6 +63,7 @@ export async function createAvailableCodes(codes: string[], hash: string) {
       update: { codes, hash },
       create: { codes, hash },
     });
+    return newCodes;
   } catch (error) {
     console.error('Error during saving new codes to DB', error);
     throw error;
