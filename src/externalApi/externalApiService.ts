@@ -9,8 +9,11 @@ export async function fetchCurrentRates(code: string): Promise<any> {
     const url = `${BASE_URL}/${API_KEY}/latest/${code}`;
     const response = await axios.get(url);
     return response.data;
-  } catch (error) {
-    console.error('Error during get current rate from external api', error);
+  } catch (error: any) {
+    console.error(
+      'Error during get current rate from external api',
+      error.response.data,
+    );
     throw error;
   }
 }

@@ -24,9 +24,9 @@ export default () => {
         const response = await getCurrentRate(code);
         res.json(response);
         return;
-      } catch (error) {
-        console.error('Error in GET /current:', error);
-        res.status(500).json({ error: 'Internal server error' });
+      } catch (error: any) {
+        console.error('Error in GET /current:', error.response.data);
+        res.status(500).json(error.response.data);
         return;
       }
     }),
@@ -58,9 +58,9 @@ export default () => {
         const rateByDate = await getRatesByDate(code, year, month, day);
         res.json(rateByDate);
         return;
-      } catch (error) {
-        console.error('Error in GET /historical:', error);
-        res.status(500).json({ error: 'Internal server error' });
+      } catch (error: any) {
+        console.error('Error in GET /historical:', error.response.data);
+        res.status(500).json(error.response.data);
         return;
       }
     }),
@@ -71,9 +71,9 @@ export default () => {
       const response = await getAvailableCodes();
       res.json(response);
       return;
-    } catch (error) {
-      console.error('Error in GET /update-codes:', error);
-      res.status(500).json({ error: 'Internal server error' });
+    } catch (error: any) {
+      console.error('Error in GET /update-codes:', error.response.data);
+      res.status(500).json(error.response.data);
       return;
     }
   });
