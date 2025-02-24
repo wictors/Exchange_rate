@@ -3,6 +3,7 @@ import prisma from '../prismaClient';
 import {
   fetchCurrentRates,
   fetchHistoricalRates,
+  fetchAvailableCodes,
 } from '../external/externalApiService';
 
 const router = Router();
@@ -101,6 +102,37 @@ export default () => {
       }
     }),
   );
+
+  router.get('/update-codes', async (req: Request, res: Response) => {
+    try {
+      const { codes, hash } = await fetchAvailableCodes();
+
+      const actualCodes = await prisma.codes.findFirst({
+        where: { id: 1 },
+      });
+
+      if (actualCodes && actualCodes.hash === hash) {
+        res.json({
+          codes: actualCodes,
+          message: 'No changes. Codes are up to date',
+        });
+        return;
+      } else {
+        const newCodes = await prisma.codes.upsert({
+          where: { id: 1 },
+          update: { codes, hash },
+          create: { codes, hash },
+        });
+
+        res.json({ codes: newCodes, message: 'Codes updated' });
+        return;
+      }
+    } catch (error) {
+      console.error('Error in GET /update-codes:', error);
+      res.status(500).json({ error: 'Internal server error' });
+      return;
+    }
+  });
 
   return router;
 };

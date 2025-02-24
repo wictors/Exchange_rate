@@ -1,4 +1,5 @@
 import axios from 'axios';
+import crypto from 'crypto';
 
 const API_KEY = process.env.EXCHANGE_RATE_API_KEY;
 const BASE_URL = process.env.EXTERNAL_API_BASE_URL;
@@ -26,6 +27,27 @@ export async function fetchHistoricalRates(
     return response.data;
   } catch (error) {
     console.error('Error during get historical rate from external api', error);
+    throw error;
+  }
+}
+
+export async function fetchAvailableCodes() {
+  try {
+    const url = `${BASE_URL}/${API_KEY}/codes`;
+    const response = await axios.get(url);
+
+    if (response) {
+      const codes = response.data.supported_codes;
+      const hash = crypto
+        .createHash('md5')
+        .update(JSON.stringify(codes))
+        .digest('hex');
+      return { codes, hash };
+    } else {
+      throw new Error('No response from external API');
+    }
+  } catch (error) {
+    console.error('Error during get available codes from external api', error);
     throw error;
   }
 }

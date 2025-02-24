@@ -9,7 +9,7 @@ generator client {
 }
 
 model History_Rates {
-  base_code        String 
+  base_code        String
   year             Int
   month            Int
   day              Int
@@ -19,6 +19,13 @@ model History_Rates {
 }
 
 model Codes {
-  id    Int      @id @default(autoincrement())
+  id    Int    @id @default(autoincrement())
   codes Json
+  hash  String @unique
+}
+
+model Current_Rates {
+  base_code        String @id
+  next_update      BigInt
+  conversion_rates Json
 }
