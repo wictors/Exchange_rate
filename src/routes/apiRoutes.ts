@@ -1,10 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import prisma from '../prismaClient';
-import {
-  fetchCurrentRates,
-  fetchHistoricalRates,
-  fetchAvailableCodes,
-} from '../external/externalApiService';
+import { getAvailableCodes } from '../services/availableCodes';
+import { getCurrentRate } from '../services/currentRates';
+import { getRatesByDate } from '../services/ratesByDate';
 
 const router = Router();
 
@@ -23,11 +20,9 @@ export default () => {
         res.status(400).json({ error: 'Parameter "code" is required.' });
         return;
       }
-
       try {
-        const data = await fetchCurrentRates(code);
-
-        res.json(data);
+        const response = await getCurrentRate(code);
+        res.json(response);
         return;
       } catch (error) {
         console.error('Error in GET /current:', error);
@@ -60,40 +55,8 @@ export default () => {
       }
 
       try {
-        const record = await prisma.history_Rates.findFirst({
-          where: { base_code: code, year: year, month: month, day: day },
-        });
-
-        if (record) {
-          res.json(record);
-          return;
-        }
-
-        const externalRecord = await fetchHistoricalRates(
-          code,
-          year,
-          month,
-          day,
-        );
-
-        if (!externalRecord) {
-          res
-            .status(404)
-            .json({ error: 'Something went wrong in external API' });
-          return;
-        }
-
-        const finalRecord = await prisma.history_Rates.create({
-          data: {
-            base_code: code,
-            year: Number(externalRecord.year),
-            month: Number(externalRecord.month),
-            day: Number(externalRecord.day),
-            conversion_rates: externalRecord.conversion_rates,
-          },
-        });
-
-        res.json(finalRecord);
+        const rateByDate = await getRatesByDate(code, year, month, day);
+        res.json(rateByDate);
         return;
       } catch (error) {
         console.error('Error in GET /historical:', error);
@@ -105,28 +68,9 @@ export default () => {
 
   router.get('/update-codes', async (req: Request, res: Response) => {
     try {
-      const { codes, hash } = await fetchAvailableCodes();
-
-      const actualCodes = await prisma.codes.findFirst({
-        where: { id: 1 },
-      });
-
-      if (actualCodes && actualCodes.hash === hash) {
-        res.json({
-          codes: actualCodes,
-          message: 'No changes. Codes are up to date',
-        });
-        return;
-      } else {
-        const newCodes = await prisma.codes.upsert({
-          where: { id: 1 },
-          update: { codes, hash },
-          create: { codes, hash },
-        });
-
-        res.json({ codes: newCodes, message: 'Codes updated' });
-        return;
-      }
+      const response = await getAvailableCodes();
+      res.json(response);
+      return;
     } catch (error) {
       console.error('Error in GET /update-codes:', error);
       res.status(500).json({ error: 'Internal server error' });
