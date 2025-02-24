@@ -45,11 +45,11 @@ export async function createRateByDate(
 
 export async function findAvailableCodes() {
   try {
-    const actualCodes = await prisma.codes.findFirst({
+    const savedData = await prisma.codes.findFirst({
       //Hardcoded, prepisuje sa iba 1 zaznam zatial. Buduce pouzitie moze ukladat historicke zmeny a vyberat podla last updated timestamp
       where: { id: 1 },
     });
-    return actualCodes;
+    return savedData;
   } catch (error) {
     console.error('Error during getting available codes from DB', error);
     throw error;

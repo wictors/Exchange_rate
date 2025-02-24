@@ -3,17 +3,17 @@ import { findAvailableCodes, createAvailableCodes } from '../db/dbHandler';
 
 export async function getAvailableCodes() {
   try {
-    const { codes, hash } = await fetchAvailableCodes();
-    const actualCodes = await findAvailableCodes();
+    const { supportedCodes, hash } = await fetchAvailableCodes();
+    const savedData = await findAvailableCodes();
 
-    if (actualCodes && actualCodes.hash === hash) {
+    if (savedData && savedData.hash === hash) {
       return {
-        codes: actualCodes,
+        data: savedData,
         message: 'No changes. Codes are up to date',
       };
     } else {
-      const newCodes = await createAvailableCodes(codes, hash);
-      return { codes: newCodes, message: 'Codes updated' };
+      const newData = await createAvailableCodes(supportedCodes, hash);
+      return { data: newData, message: 'Codes updated' };
     }
   } catch (error) {
     console.error('Error in updateCode service: ', error);

@@ -21,7 +21,11 @@ export default () => {
         return;
       }
       try {
-        const response = await getCurrentRate(code);
+        const data = await getCurrentRate(code);
+        const response = {
+          base_code: data.base_code,
+          conversion_rate: data.conversion_rates,
+        };
         res.json(response);
         return;
       } catch (error: any) {
@@ -36,16 +40,16 @@ export default () => {
     '/historical',
     asyncHandler(async (req: Request, res: Response) => {
       const code = req.query.code as string;
-      const year = req.query.year ? Number(req.query.year) : null;
-      const month = req.query.month ? Number(req.query.month) : null;
-      const day = req.query.day ? Number(req.query.day) : null;
+      const date = req.query.date as string;
 
-      if (!code || !year || !month || !day) {
+      if (!code || !date) {
         res
           .status(400)
-          .json({ error: 'Parameters code, year, month and day are required' });
+          .json({ error: 'Parameters code and date are required' });
         return;
       }
+
+      const [year, month, day] = date.split('-').map(Number);
 
       if (isNaN(year) || isNaN(month) || isNaN(day)) {
         res
@@ -69,7 +73,7 @@ export default () => {
   router.get('/update-codes', async (req: Request, res: Response) => {
     try {
       const response = await getAvailableCodes();
-      res.json(response);
+      res.json({ message: response.message, codes: response.data.codes });
       return;
     } catch (error: any) {
       console.error('Error in GET /update-codes:', error.response.data);

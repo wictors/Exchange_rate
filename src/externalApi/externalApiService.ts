@@ -40,12 +40,12 @@ export async function fetchAvailableCodes() {
     const response = await axios.get(url);
 
     if (response) {
-      const codes = response.data.supported_codes;
+      const supportedCodes = response.data.supported_codes;
       const hash = crypto
         .createHash('md5')
-        .update(JSON.stringify(codes))
+        .update(JSON.stringify(supportedCodes))
         .digest('hex');
-      return { codes, hash };
+      return { supportedCodes, hash };
     } else {
       throw new Error('No response from external API');
     }
