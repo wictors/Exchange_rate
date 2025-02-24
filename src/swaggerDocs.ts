@@ -75,4 +75,51 @@
  *                 codes:
  *                   type: array
  *
+ * /exchange_api/extremes:
+ *   get:
+ *     summary: Ziskanie extremov minima a maxima kurzu
+ *     description: Vrati najmensi a najvacsi kurz pre zvolene meny a datumove rozpatie.
+ *     parameters:
+ *       - in: query
+ *         name: base_code
+ *         schema:
+ *           type: string
+ *           format: string
+ *         description: Kód meny, pre ktorú sa majú získať kurzy
+ *         required: true
+ *       - in: query
+ *         name: target_code
+ *         schema:
+ *           type: string
+ *           format: string
+ *         description: Kod meny, voci ktorej sa maju ziskat kurzy
+ *         required: true
+ *       - in: query
+ *         name: from
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Dátum vo formáte YYYY-MM-DD od kedy sa majú získať kurzy
+ *         required: true
+ *       - in: query
+ *         name: to
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Dátum vo formáte YYYY-MM-DD do kedy sa majú získať kurzy
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Úspešná odpoveď
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 min:
+ *                   type: number
+ *                   format: float
+ *                 max:
+ *                   type: number
+ *                   format: float
  */
