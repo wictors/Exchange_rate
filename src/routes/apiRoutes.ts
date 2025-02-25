@@ -5,9 +5,7 @@ import { getRatesByDate } from '../services/ratesByDate';
 
 interface ExchangeRateResponse {
   base_code: string;
-  year: number;
-  month: number;
-  day: number;
+  date: Date;
   conversion_rates: Record<string, number>;
 }
 
@@ -67,7 +65,8 @@ export default () => {
       }
 
       try {
-        const rateByDate = await getRatesByDate(code, year, month, day);
+        const byDate = new Date(date);
+        const rateByDate = await getRatesByDate(code, year, month, day, byDate);
         res.json(rateByDate);
         return;
       } catch (error: any) {
@@ -113,6 +112,7 @@ export default () => {
           fromDate.getFullYear(),
           fromDate.getMonth() + 1, // zero-based
           fromDate.getDate(),
+          fromDate,
         )) as ExchangeRateResponse;
         allRates.push(rateByDate);
         fromDate.setDate(fromDate.getDate() + 1);

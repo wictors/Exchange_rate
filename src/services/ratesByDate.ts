@@ -6,9 +6,10 @@ export async function getRatesByDate(
   year: number,
   month: number,
   day: number,
+  date: Date,
 ) {
   try {
-    const rateFromDB = await findRateByDate(code, year, month, day);
+    const rateFromDB = await findRateByDate(code, date);
     if (rateFromDB) {
       return rateFromDB;
     }
@@ -23,9 +24,7 @@ export async function getRatesByDate(
 
     const createdRate = await createRateByDate(
       code,
-      year,
-      month,
-      day,
+      date,
       externalRate.conversion_rates,
     );
 

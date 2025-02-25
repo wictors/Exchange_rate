@@ -2,15 +2,10 @@ import { getPrismaInstance } from '../utils/prismaClient';
 
 const prisma = getPrismaInstance();
 
-export async function findRateByDate(
-  code: string,
-  year: number,
-  month: number,
-  day: number,
-) {
+export async function findRateByDate(code: string, date: Date) {
   try {
-    const rateFromDB = await prisma.history_Rates.findFirst({
-      where: { base_code: code, year: year, month: month, day: day },
+    const rateFromDB = await prisma.rates.findFirst({
+      where: { base_code: code, date: date },
     });
     return rateFromDB;
   } catch (error) {
@@ -21,18 +16,14 @@ export async function findRateByDate(
 
 export async function createRateByDate(
   code: string,
-  year: number,
-  month: number,
-  day: number,
+  date: Date,
   conversion_rates: Record<string, number>,
 ) {
   try {
-    const createRate = await prisma.history_Rates.create({
+    const createRate = await prisma.rates.create({
       data: {
         base_code: code,
-        year: year,
-        month: month,
-        day: day,
+        date: date,
         conversion_rates: conversion_rates,
       },
     });

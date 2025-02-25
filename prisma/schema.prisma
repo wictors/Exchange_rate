@@ -8,14 +8,12 @@ generator client {
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
-model History_Rates {
+model Rates {
   base_code        String
-  year             Int
-  month            Int
-  day              Int
+  date             DateTime
   conversion_rates Json
 
-  @@id([base_code, year, month, day])
+  @@id([base_code, date])
 }
 
 model Codes {
