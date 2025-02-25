@@ -21,9 +21,3 @@ model Codes {
   codes Json
   hash  String @unique
 }
-
-model Current_Rates {
-  base_code        String @id
-  next_update      BigInt
-  conversion_rates Json
-}

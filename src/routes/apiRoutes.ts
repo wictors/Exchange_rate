@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { getAvailableCodes } from '../services/availableCodes';
-import { getCurrentRate } from '../services/currentRates';
 import { getRatesByDate } from '../services/ratesByDate';
 
 interface ExchangeRateResponse {
@@ -27,7 +26,13 @@ export default () => {
         return;
       }
       try {
-        const data = await getCurrentRate(code);
+        const date = new Date();
+        const year = date.getUTCFullYear();
+        const month = date.getUTCMonth() + 1; // zero-based
+        const day = date.getDate();
+        const today = new Date(`${year}-${month}-${day}`);
+
+        const data = await getRatesByDate(code, year, month, day, today);
         const response = {
           base_code: data.base_code,
           conversion_rate: data.conversion_rates,
